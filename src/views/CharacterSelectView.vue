@@ -1,30 +1,64 @@
 <template>
   <div class="character-selection">
-    <h1 class="title">캐릭터를 선택해 주세요</h1>
+    <h1 class="title" :class="{ 'title-hidden': selectedCharacter }">캐릭터를 선택해 주세요</h1>
 
-    <div class="avatars-container">
-      <div
-          v-for="avatar in avatars"
-          :key="avatar.id"
-          class="avatar-wrapper"
-          @click="selectAvatar(avatar)"
-      >
-        <img
-            :src="avatar.image"
-            :alt="avatar.name"
-            :class="`avatar-image avatar-${avatar.id}`"
-        />
-        <p class="avatar-name">{{ avatar.name }}</p>
+    <div class="main-content">
+      <!-- Character Selection Area -->
+      <div class="avatars-container" :class="{ 'avatars-selected': selectedCharacter }">
+        <div
+            v-for="avatar in avatars"
+            :key="avatar.id"
+            class="avatar-wrapper"
+            :class="{
+            'avatar-selected': selectedCharacter?.id === avatar.id,
+            'avatar-hidden': selectedCharacter && selectedCharacter.id !== avatar.id
+          }"
+            @click="selectAvatar(avatar)"
+        >
+          <img
+              :src="avatar.image"
+              :alt="avatar.name"
+              :class="`avatar-image avatar-${avatar.id}`"
+          />
+          <p class="avatar-name">{{ avatar.name }}</p>
+        </div>
+      </div>
+
+      <!-- Books Display Area -->
+      <div class="books-panel" :class="{ 'books-panel-visible': selectedCharacter }">
+        <div class="books-header">
+          <h2>{{ selectedCharacter?.name }} 추천 베스트셀러</h2>
+          <button class="back-button" @click="goBack">← 캐릭터 선택으로 돌아가기</button>
+        </div>
+        <div class="books-list">
+          <div v-for="book in currentBooks" :key="book.id" class="book-item">
+            <div class="book-cover">📚</div>
+            <div class="book-info">
+              <h3>{{ book.title }}</h3>
+              <p class="book-author">{{ book.author }}</p>
+              <p class="book-price">{{ book.price }}원</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from 'vue'
+
 interface Avatar {
   id: number;
   name: string;
   image: string;
+}
+
+interface Book {
+  id: number;
+  title: string;
+  author: string;
+  price: string;
 }
 
 // Define your avatars here - replace with your actual image paths
@@ -32,22 +66,58 @@ const avatars: Avatar[] = [
   {
     id: 1,
     name: "개발자",
-    image: "/images/avatar_dev.png" // Replace with your image path
+    image: "/images/avatar_dev.png"
   },
   {
     id: 2,
     name: "기획자",
-    image: "/images/avatar_designer.png" // Replace with your image path
+    image: "/images/avatar_designer.png"
   },
   {
     id: 3,
     name: "디자이너",
-    image: "/images/avatar_artist.png" // Replace with your image path
+    image: "/images/avatar_artist.png"
   }
 ];
 
+// Sample books data for each character (Korean books)
+const booksData: Record<number, Book[]> = {
+  1: [ // 개발자
+    { id: 1, title: "클린 코드", author: "로버트 C. 마틴", price: "25,000" },
+    { id: 2, title: "실용주의 프로그래머", author: "데이비드 토머스, 앤드류 헌트", price: "23,000" },
+    { id: 3, title: "리팩터링", author: "마틴 파울러", price: "28,000" },
+    { id: 4, title: "이펙티브 자바", author: "조슈아 블로크", price: "32,000" },
+    { id: 5, title: "HTTP 완벽 가이드", author: "데이빗 고울리", price: "35,000" }
+  ],
+  2: [ // 기획자
+    { id: 6, title: "린 스타트업", author: "에릭 리스", price: "18,000" },
+    { id: 7, title: "스프린트", author: "제이크 냅", price: "20,000" },
+    { id: 8, title: "호모 헌드레드", author: "김영세", price: "16,000" },
+    { id: 9, title: "UX/UI의 10가지 심리학 법칙", author: "존 야블론스키", price: "22,000" },
+    { id: 10, title: "기획자의 일", author: "유영만", price: "19,000" }
+  ],
+  3: [ // 디자이너
+    { id: 11, title: "디자인의 디자인", author: "하라 켄야", price: "24,000" },
+    { id: 12, title: "좋은 디자인이란 무엇인가", author: "디터 람스", price: "27,000" },
+    { id: 13, title: "사용자 경험 디자인", author: "피터 모빌", price: "30,000" },
+    { id: 14, title: "타이포그래피 교과서", author: "프리드리히 포르스만", price: "33,000" },
+    { id: 15, title: "컬러의 힘", author: "에바 헬러", price: "21,000" }
+  ]
+};
+
+const selectedCharacter = ref<Avatar | null>(null);
+
+const currentBooks = computed(() => {
+  if (!selectedCharacter.value) return [];
+  return booksData[selectedCharacter.value.id] || [];
+});
+
 const selectAvatar = (avatar: Avatar): void => {
-  alert(`You chose ${avatar.name}!`);
+  selectedCharacter.value = avatar;
+};
+
+const goBack = (): void => {
+  selectedCharacter.value = null;
 };
 </script>
 
@@ -61,19 +131,32 @@ const selectAvatar = (avatar: Avatar): void => {
 .character-selection {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
   min-height: 100vh;
   min-width: 100vw;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   font-family: 'Arial', sans-serif;
+  overflow-x: hidden;
 }
 
 .title {
   color: white;
   font-size: 2.5rem;
-  margin-bottom: 3rem;
+  text-align: center;
+  padding: 2rem;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  transition: all 0.5s ease;
+}
+
+.title-hidden {
+  opacity: 0;
+  transform: translateY(-20px);
+  pointer-events: none;
+}
+
+.main-content {
+  display: flex;
+  flex: 1;
+  position: relative;
 }
 
 .avatars-container {
@@ -82,6 +165,18 @@ const selectAvatar = (avatar: Avatar): void => {
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
+  width: 100%;
+  padding: 2rem;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.avatars-selected {
+  width: 300px;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  justify-content: flex-start;
+  padding-top: 2rem;
 }
 
 .avatar-wrapper {
@@ -89,18 +184,37 @@ const selectAvatar = (avatar: Avatar): void => {
   flex-direction: column;
   align-items: center;
   cursor: pointer;
-  transition: transform 0.3s ease;
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   padding: 1rem;
   border-radius: 15px;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border: 2px solid rgba(255, 255, 255, 0.2);
+  opacity: 1;
+  transform: scale(1);
+  transform-origin: center;
 }
 
 .avatar-wrapper:hover {
   transform: scale(1.1);
   background: rgba(255, 255, 255, 0.2);
   border-color: rgba(255, 255, 255, 0.4);
+}
+
+.avatar-selected {
+  transform: scale(0.85) !important;
+  margin-bottom: 1rem;
+  opacity: 1;
+}
+
+.avatar-selected:hover {
+  transform: scale(0.9) !important;
+}
+
+.avatar-hidden {
+  opacity: 0;
+  transform: scale(0.8) translateX(-20px);
+  pointer-events: none;
 }
 
 .avatar-image {
@@ -111,6 +225,11 @@ const selectAvatar = (avatar: Avatar): void => {
   border: 4px solid rgba(255, 255, 255, 0.3);
   transition: all 0.3s ease;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.avatars-selected .avatar-image {
+  width: 100px;
+  height: 100px;
 }
 
 .avatar-wrapper:hover .avatar-image {
@@ -125,13 +244,129 @@ const selectAvatar = (avatar: Avatar): void => {
   font-weight: bold;
   text-align: center;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  transition: font-size 0.3s ease;
+}
+
+.avatars-selected .avatar-name {
+  font-size: 1rem;
+  margin-top: 0.5rem;
+}
+
+.books-panel {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 2rem;
+  transform: translateX(100%);
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+}
+
+.books-panel-visible {
+  transform: translateX(0);
+}
+
+.books-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #333;
+}
+
+.books-header h2 {
+  font-size: 1.8rem;
+  color: #fff;
+}
+
+.back-button {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s ease;
+  white-space: nowrap;
+}
+
+.back-button:hover {
+  background: #5a67d8;
+}
+
+.books-list {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.book-item {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.book-item:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.book-cover {
+  font-size: 2.5rem;
+  margin-right: 1.5rem;
+  width: 60px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  border-radius: 8px;
+}
+
+.book-info {
+  flex: 1;
+}
+
+.book-info h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  color: #fff;
+}
+
+.book-author {
+  color: #bbb;
+  margin-bottom: 0.5rem;
+  font-style: italic;
+}
+
+.book-price {
+  color: #4ecdc4;
+  font-weight: bold;
+  font-size: 1.1rem;
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
+  .main-content {
+    flex-direction: column;
+  }
+
   .avatars-container {
     flex-direction: column;
     gap: 2rem;
+  }
+
+  .avatars-selected {
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    padding: 1rem;
   }
 
   .title {
@@ -141,6 +376,25 @@ const selectAvatar = (avatar: Avatar): void => {
   .avatar-image {
     width: 120px;
     height: 120px;
+  }
+
+  .avatars-selected .avatar-image {
+    width: 80px;
+    height: 80px;
+  }
+
+  .books-panel {
+    transform: translateY(100%);
+  }
+
+  .books-panel-visible {
+    transform: translateY(0);
+  }
+
+  .books-header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
   }
 }
 </style>
