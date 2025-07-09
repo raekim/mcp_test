@@ -47,6 +47,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import {MCPConnector} from "@/views/MCPConnector.ts";
 
 interface Avatar {
   id: number;
@@ -106,10 +107,11 @@ const booksData: Record<number, Book[]> = {
 };
 
 const selectedCharacter = ref<Avatar | null>(null);
+const connector = new MCPConnector('', '');
 
 const currentBooks = computed(() => {
   if (!selectedCharacter.value) return [];
-  return booksData[selectedCharacter.value.id] || [];
+  return connector.getBooksByAvatar(selectedCharacter.value.name);
 });
 
 const selectAvatar = (avatar: Avatar): void => {

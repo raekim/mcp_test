@@ -11,6 +11,9 @@
     "type-check": "vue-tsc --build"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.56.0",
+    "@modelcontextprotocol/sdk": "^1.15.0",
+    "dotenv": "^17.1.0",
     "pinia": "^3.0.1",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"

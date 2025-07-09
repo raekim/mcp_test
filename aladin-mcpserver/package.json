@@ -1,0 +1,55 @@
+{
+  "name": "aladin-mcp-server",
+  "version": "1.0.0",
+  "description": "알라딘 책 API를 Model Context Protocol(MCP) 서버로 제공하는 패키지",
+  "main": "dist/index.js",
+  "type": "module",
+  "bin": {
+    "aladin-mcp-server": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc -w & node --watch dist/index.js",
+    "prepublishOnly": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "mcp",
+    "aladin",
+    "book",
+    "api",
+    "llm",
+    "claude",
+    "model-context-protocol"
+  ],
+  "author": "tenacl",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tenacl/aladin-mcpserver.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tenacl/aladin-mcpserver/issues"
+  },
+  "homepage": "https://github.com/tenacl/aladin-mcpserver",
+  "license": "MIT",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.56.0",
+    "@modelcontextprotocol/sdk": "^1.15.0",
+    "axios": "^1.8.4",
+    "dotenv": "^17.1.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.14",
+    "typescript": "^5.8.2"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

@@ -5,6 +5,7 @@ import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './router'
+import MCPClient from "@/MCPClient.ts";
 
 const app = createApp(App)
 
