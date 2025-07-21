@@ -82,6 +82,15 @@ class MCPClient {
         return finalText.join("\n");
     }
 }
+const express = require('express');
+const app = express();
+const PORT = process.env.SERVER_PORT;
+app.get('/', (req, res) => {
+    res.send('Hello, world! This is a response from your Express server.');
+});
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
 async function main() {
     const mcpClient = new MCPClient();
     try {

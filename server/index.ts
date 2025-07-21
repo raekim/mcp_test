@@ -5,8 +5,8 @@ import {
 } from "@anthropic-ai/sdk/resources/messages/messages.mjs";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
-import readline from "readline/promises";
 import dotenv from "dotenv";
+import express from 'express';
 
 dotenv.config();
 
@@ -107,6 +107,17 @@ class MCPClient {
         return finalText.join("\n");
     }
 }
+
+const app = express();
+const PORT = process.env.SERVER_PORT;
+
+app.get('/', (req: any, res: any) => {
+    res.send('Hello, world! This is a response from your Express server.');
+});
+
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
 
 async function main() {
     const mcpClient = new MCPClient();
