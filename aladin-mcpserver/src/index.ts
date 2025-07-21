@@ -6,7 +6,6 @@ import { z } from 'zod';
 import { AladinService } from './services/aladin.js';
 import { loadConfig } from './utils/config.js';
 import { bookCategories } from './data/categories.js';
-import MCPClient from "../../server/src/MCPClient.js";
 
 async function main() {
   try {
