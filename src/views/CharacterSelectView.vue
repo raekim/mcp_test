@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import {ref, computed, watch} from 'vue'
 import {MCPConnector} from "@/views/MCPConnector.ts";
 
 interface Avatar {
@@ -109,10 +109,17 @@ const booksData: Record<number, Book[]> = {
 const selectedCharacter = ref<Avatar | null>(null);
 const connector = new MCPConnector('', '');
 
-const currentBooks = computed(() => {
-  if (!selectedCharacter.value) return [];
-  return connector.getBooksByAvatar(selectedCharacter.value.name);
-});
+const currentBooks = ref<Book[]>([]);
+
+watch(selectedCharacter, async (newChar) => {
+  if (!newChar) {
+    currentBooks.value = [];
+    return;
+  }
+  const books = await connector.getBooksByAvatar(newChar.name);
+  console.log(books);
+  currentBooks.value = books;
+}, { immediate: true });
 
 const selectAvatar = (avatar: Avatar): void => {
   selectedCharacter.value = avatar;

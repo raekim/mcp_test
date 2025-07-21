@@ -31,28 +31,15 @@ class MCPConnector {
      * @returns Promise<Book[]> - Array of books for the character
      */
     async getBooksByAvatar(avatarName: string): Promise<Book[]> {
-        try {
-            // TODO: Implement API call to server
-            // const response = await fetch(`${this.baseUrl}/books/${avatarName}`, {
-            //   headers: {
-            //     'Authorization': `Bearer ${this.apiKey}`,
-            //     'Content-Type': 'application/json'
-            //   }
-            // });
-            //
-            // if (!response.ok) {
-            //   throw new Error(`Failed to fetch books: ${response.statusText}`);
-            // }
-            //
-            // const books: Book[] = await response.json();
-            // return books;
+        const URL = 'http://localhost:3000/books/dev'
+        const response = await fetch(URL);
 
-            // Placeholder return for now
-            return [];
-        } catch (error) {
-            console.error('Error fetching books:', error);
-            throw error;
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
+
+        const json = await response.json();
+        return json.data as Book[];
     }
 
     /**
