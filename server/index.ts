@@ -142,16 +142,33 @@ app.get('/books/dev', async (req: any, res: any) => {
         '  title: string;\n' +
         '  author: string;\n' +
         '  price: string;\n' +
-        '} 포맷으로 넘겨줘. 다른 설명이나 텍스트 없이 JSON 배열만 반환해.' );
+        '} 포맷으로 넘겨줘. 다른 설명이나 텍스트 없이 JSON 배열만 반환해. 없는 책 지어내지 말고 알라딘 api 에서 주는 정보만 알려줘' );
     const books = extractLastJSONArray(response);
     console.log(books);
     res.json({ data: books, });
 });
 app.get('/books/art', async (req: any, res: any) => {
-    const response = await mcpClient.processQuery('디자이너 베스트셀러 추천해줘')
+    const response = await mcpClient.processQuery('아트, 디자이너 직군에 대한 베스트셀러 추천해줘. 최대 10권까지, 책 리스트는 {\n' +
+        '  id: number;\n' +
+        '  title: string;\n' +
+        '  author: string;\n' +
+        '  price: string;\n' +
+        '} 포맷으로 넘겨줘. 다른 설명이나 텍스트 없이 JSON 배열만 반환해. 없는 책 지어내지 말고 알라딘 api 에서 주는 정보만 알려줘' );
+    const books = extractLastJSONArray(response);
+    console.log(books);
+    res.json({ data: books, });
 });
 app.get('/books/design', async (req: any, res: any) => {
-    const response = await mcpClient.processQuery('기획자 베스트셀러 추천해줘')
+    const response = await mcpClient.processQuery('기획자, UX 에 대한 베스트셀러 추천해줘. 최대 10권까지, 책 리스트는 {\n' +
+        '  id: number;\n' +
+        '  title: string;\n' +
+        '  author: string;\n' +
+        '  price: string;\n' +
+        '  img: string;\n' +
+        '} 포맷으로 넘겨줘. 다른 설명이나 텍스트 없이 JSON 배열만 반환해. 없는 책 지어내지 말고 알라딘 api 에서 주는 정보만 알려줘.' );
+    const books = extractLastJSONArray(response);
+    console.log(books);
+    res.json({ data: books, });
 });
 
 app.listen(PORT, () => {

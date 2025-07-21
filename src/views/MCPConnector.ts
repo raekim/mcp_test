@@ -31,7 +31,12 @@ class MCPConnector {
      * @returns Promise<Book[]> - Array of books for the character
      */
     async getBooksByAvatar(avatarName: string): Promise<Book[]> {
-        const URL = 'http://localhost:3000/books/dev'
+        let avatar = '';
+        if (avatarName === '개발자') avatar = 'dev';
+        if (avatarName === '디자이너') avatar = 'art';
+        if (avatarName === '기획자') avatar = 'design';
+
+        const URL = `http://localhost:3000/books/${avatar}`
         const response = await fetch(URL);
 
         if (!response.ok) {

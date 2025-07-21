@@ -32,7 +32,7 @@
         </div>
         <div class="books-list">
           <div v-for="book in currentBooks" :key="book.id" class="book-item">
-            <div class="book-cover">📚</div>
+            <div class="book-cover"><img :src="book.img" width="100%"></div>
             <div class="book-info">
               <h3>{{ book.title }}</h3>
               <p class="book-author">{{ book.author }}</p>
@@ -60,6 +60,7 @@ interface Book {
   title: string;
   author: string;
   price: string;
+  img: string;
 }
 
 // Define your avatars here - replace with your actual image paths
@@ -80,31 +81,6 @@ const avatars: Avatar[] = [
     image: "/images/avatar_artist.png"
   }
 ];
-
-// Sample books data for each character (Korean books)
-const booksData: Record<number, Book[]> = {
-  1: [ // 개발자
-    { id: 1, title: "클린 코드", author: "로버트 C. 마틴", price: "25,000" },
-    { id: 2, title: "실용주의 프로그래머", author: "데이비드 토머스, 앤드류 헌트", price: "23,000" },
-    { id: 3, title: "리팩터링", author: "마틴 파울러", price: "28,000" },
-    { id: 4, title: "이펙티브 자바", author: "조슈아 블로크", price: "32,000" },
-    { id: 5, title: "HTTP 완벽 가이드", author: "데이빗 고울리", price: "35,000" }
-  ],
-  2: [ // 기획자
-    { id: 6, title: "린 스타트업", author: "에릭 리스", price: "18,000" },
-    { id: 7, title: "스프린트", author: "제이크 냅", price: "20,000" },
-    { id: 8, title: "호모 헌드레드", author: "김영세", price: "16,000" },
-    { id: 9, title: "UX/UI의 10가지 심리학 법칙", author: "존 야블론스키", price: "22,000" },
-    { id: 10, title: "기획자의 일", author: "유영만", price: "19,000" }
-  ],
-  3: [ // 디자이너
-    { id: 11, title: "디자인의 디자인", author: "하라 켄야", price: "24,000" },
-    { id: 12, title: "좋은 디자인이란 무엇인가", author: "디터 람스", price: "27,000" },
-    { id: 13, title: "사용자 경험 디자인", author: "피터 모빌", price: "30,000" },
-    { id: 14, title: "타이포그래피 교과서", author: "프리드리히 포르스만", price: "33,000" },
-    { id: 15, title: "컬러의 힘", author: "에바 헬러", price: "21,000" }
-  ]
-};
 
 const selectedCharacter = ref<Avatar | null>(null);
 const connector = new MCPConnector('', '');
